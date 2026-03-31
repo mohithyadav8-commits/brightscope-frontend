@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BrightScope AI Engine</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f4f8; color: #333; padding: 40px; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        h1 { color: #185FA5; font-size: 28px; margin-bottom: 5px; }
+        p.subtitle { color: #666; margin-bottom: 30px; font-size: 15px; }
+        .input-group { display: flex; gap: 10px; margin-bottom: 30px; }
+        input { flex: 1; padding: 14px; font-size: 16px; border: 1px solid #d1d5db; border-radius: 6px; }
+        button { padding: 14px 24px; background: #185FA5; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        button:hover { background: #0C447C; }
+        .card { background: #ffffff; padding: 25px; margin-top: 20px; border: 1px solid #e5e7eb; border-top: 4px solid #185FA5; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .card h3 { margin-top: 0; color: #1f2937; display: flex; align-items: center; gap: 8px; }
+        #results { display: none; }
+        .loader { display: none; margin-top: 20px; padding: 15px; background: #e0f2fe; color: #0369a1; border-radius: 6px; font-weight: 500; text-align: center; }
+        .label { font-weight: 600; color: #4b5563; }
+        .value { color: #1f2937; line-height: 1.6; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BrightScope <span>AI Engine</span></h1>
+        <p class="subtitle">Enter a Middle Eastern B2B Target to generate a live sales strategy and automated outreach.</p>
+        
+        <div class="input-group">
+            <input type="text" id="companyInput" placeholder="e.g., Emaar Properties, Bigen Group, Al Futtaim...">
+            <button onclick="runEngine()">Generate Strategy</button>
+        </div>
+        
+        <div id="loader" class="loader">⚙️ Engine running: Scraping website, analyzing live news, and generating strategy... (This takes ~15 seconds)</div>
+
+        <div id="results">
+            <div class="card" style="border-top-color: #185FA5;">
+                <h3>🎯 The Strategic Blueprint</h3>
+                <div class="label">Primary Pitch:</div>
+                <div class="value" id="rService" style="font-size: 18px; font-weight: bold; color: #185FA5;"></div>
+                <div class="label">The Reason:</div>
+                <div class="value" id="rReason"></div>
+                <div class="label">Macro Urgency (Vision 2030 / AI Strategy 2031):</div>
+                <div class="value" id="rUrgency"></div>
+            </div>
+
+            <div class="card" style="border-top-color: #BA7517;">
+                <h3>🛡️ The Tactical Approach</h3>
+                <div class="label">Target Personas:</div>
+                <div class="value" id="rPersonas"></div>
+                <div class="label">Top Objection & Defense:</div>
+                <div class="value" id="rObjections"></div>
+            </div>
+
+            <div class="card" style="border-top-color: #1D9E75;">
+                <h3>✉️ 1-Click Outreach</h3>
+                <div class="label">Subject Line:</div>
+                <div class="value" id="rSubj" style="font-weight: bold;"></div>
+                <div class="label">Email Draft:</div>
+                <div class="value"><i id="rBody"></i></div>
+                
+                <button style="background: #1D9E75; margin-top: 10px; width: 100%;" onclick="pushToOutlook()">Push to Outlook Outbox 🚀</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function runEngine() {
+            const company = document.getElementById('companyInput').value;
+            if(!company) return alert("Please enter a company name!");
+            
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('results').style.display = 'none';
+
+            try {
+                // Sends the company name to your LIVE Cloud Python server!
+                const response = await fetch('https://brightscope-backend.onrender.com/analyse', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ company_name: company })
+                });
+                
+                const data = await response.json();
+                
+                if(data.error) {
+                    alert("Engine Error: " + data.error);
+                    document.getElementById('loader').style.display = 'none';
+                    return;
+                }
+
+                document.getElementById('rService').innerText = data.service;
+                document.getElementById('rReason').innerText = data.reason;
+                document.getElementById('rUrgency').innerText = data.urgency;
+                document.getElementById('rPersonas').innerText = data.personas;
+                document.getElementById('rObjections').innerText = data.objections;
+                document.getElementById('rSubj').innerText = data.email_subject;
+                document.getElementById('rBody').innerText = data.email_body;
+
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('results').style.display = 'block';
+            } catch (error) {
+                alert("Could not connect to the engine. Make sure your Python server is running!");
+                document.getElementById('loader').style.display = 'none';
+            }
+        }
+
+        function pushToOutlook() {
+            const subject = encodeURIComponent(document.getElementById('rSubj').innerText);
+            const body = encodeURIComponent(document.getElementById('rBody').innerText);
+            // This triggers your default mail client (Outlook) to draft the email!
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
+        }
+    </script>
+</body>
+</html>
