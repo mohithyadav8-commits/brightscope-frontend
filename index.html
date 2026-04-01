@@ -2,14 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>BrightScope Global V2.1</title>
+    <title>BrightScope Global V2.2 - Full Enterprise</title>
     <style>
-        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f8fafc; --border: #334155; }
-        body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 40px 20px; }
+        :root { --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f8fafc; --text-muted: #94a3b8; --border: #334155; }
+        body { font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); padding: 40px 20px; line-height: 1.6; }
         .container { max-width: 1100px; margin: auto; }
         
         /* Search Area */
-        .search-box { display: flex; gap: 15px; margin-bottom: 40px; }
+        h1 { font-size: 32px; font-weight: 300; letter-spacing: 1px; margin-bottom: 5px; }
+        h1 strong { color: var(--accent); font-weight: 600; }
+        .search-box { display: flex; gap: 15px; margin-bottom: 40px; margin-top: 20px; }
         input { flex: 1; padding: 20px; background: var(--card); border: 1px solid var(--border); color: white; border-radius: 12px; outline: none; font-size: 16px; }
         button { padding: 0 40px; background: var(--accent); color: #0f172a; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; }
         button:hover { filter: brightness(1.1); transform: scale(1.02); }
@@ -20,26 +22,49 @@
         .ring { position: absolute; width: 100%; height: 100%; border: 4px solid transparent; border-top-color: var(--accent); border-radius: 50%; animation: spin 1.5s linear infinite; }
         .ring.inner { width: 70%; height: 70%; top: 15%; left: 15%; border-top-color: #f472b6; animation-direction: reverse; }
         .countdown { font-size: 24px; font-weight: bold; color: var(--accent); margin-top: 15px; }
+        .pulse-text { color: var(--accent); font-weight: 500; letter-spacing: 1px; animation: pulse 1.5s ease-in-out infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-        /* Data Grid Upgrade */
-        .data-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin-bottom: 30px; }
-        .box { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; text-align: center; }
-        .box span { display: block; font-size: 11px; color: var(--accent); text-transform: uppercase; margin-bottom: 10px; font-weight: 900; }
-        .box strong { font-size: 16px; word-break: break-word; }
-
+        /* Restored Results Layout */
         #results { display: none; animation: fadeIn 0.8s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
-        .badge { background: #064e3b; color: #34d399; padding: 8px 16px; border-radius: 30px; font-weight: bold; font-size: 13px; }
-        .card { background: var(--card); padding: 30px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; }
-        .label { color: var(--accent); font-size: 12px; font-weight: 900; text-transform: uppercase; margin-bottom: 8px; }
+        .target-name { font-size: 28px; margin: 0; }
+        .badge { background: #064e3b; color: #34d399; padding: 8px 16px; border-radius: 30px; font-weight: bold; font-size: 13px; border: 1px solid #047857; }
+        
+        /* Data Grids */
+        .data-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin-bottom: 15px; }
+        .box { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 12px; text-align: center; }
+        .box span { display: block; font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 10px; font-weight: 900; letter-spacing: 1px;}
+        .box strong { font-size: 16px; word-break: break-word; }
+
+        .c-suite-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; background: var(--card); padding: 20px; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 30px; }
+        .c-suite-item { text-align: center; border-right: 1px solid var(--border); }
+        .c-suite-item:last-child { border-right: none; }
+        .c-suite-item span { display: block; font-size: 11px; color: var(--accent); font-weight: bold; margin-bottom: 5px; text-transform: uppercase;}
+        .c-suite-item div { font-size: 14px; }
+
+        /* Full Strategy Cards */
+        .card { background: var(--card); padding: 30px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; border-top: 3px solid var(--accent); }
+        .card h3 { margin-top: 0; font-weight: 500; margin-bottom: 20px; font-size: 20px; }
+        .label { color: var(--text-muted); font-size: 12px; font-weight: 900; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px;}
+        .value { margin-bottom: 25px; font-size: 15px; }
+        .value.highlight { color: var(--accent); font-size: 18px; font-weight: bold; }
+        
+        /* Buttons */
+        .action-btn { display: block; width: 100%; padding: 15px; text-align: center; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--border); border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; margin-top: 10px; }
+        .action-btn:hover { background: var(--border); }
+        .action-btn.primary { background: var(--accent); color: #0f172a; border: none; }
+        .action-btn.primary:hover { opacity: 0.9; }
+        .excel-btn { padding: 10px 20px; background: #16a34a; color: white; font-size: 13px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold;}
+        .excel-btn:hover { background: #15803d; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>BrightScope <strong>Global V2.1</strong></h1>
+        <h1>BrightScope <strong>Global V2.2</strong></h1>
         <div class="search-box">
             <input type="text" id="companyInput" placeholder="Enter Company Name or URL...">
             <button onclick="runEngine()">SCAN TARGET</button>
@@ -47,16 +72,16 @@
 
         <div id="loader">
             <div class="orbital"><div class="ring"></div><div class="ring inner"></div></div>
-            <div class="pulse-text">PENETRATING GLOBAL SERVERS...</div>
+            <div class="pulse-text">HARVESTING GLOBAL DATA & ARCHITECTING STRATEGY...</div>
             <div class="countdown" id="timer">15s</div>
         </div>
 
         <div id="results">
             <div class="header">
-                <h2 id="rName" style="margin:0">Company</h2>
-                <div style="display:flex; gap:10px;">
-                    <div class="badge" id="rConfidence">9/10 Confidence</div>
-                    <button onclick="copyToExcel()" style="padding:10px 20px; background:#16a34a; color:white; font-size:13px;">📋 Copy Row</button>
+                <h2 class="target-name" id="rName">Company</h2>
+                <div style="display:flex; gap:15px; align-items: center;">
+                    <div class="badge" id="rConfidence">Accuracy: 9/10</div>
+                    <button class="excel-btn" onclick="copyToExcel()">📋 Copy to Excel</button>
                 </div>
             </div>
 
@@ -68,31 +93,60 @@
                 <div class="box"><span>Revenue</span><strong id="rRev">-</strong></div>
             </div>
 
-            <div class="card" style="border-top: 4px solid var(--accent);">
-                <div class="label">Primary Pitch</div>
-                <div id="rService" style="font-size:20px; font-weight:bold; margin-bottom:20px;"></div>
-                <div class="label">Strategic Rationale</div>
-                <div id="rReason"></div>
+            <div class="c-suite-grid">
+                <div class="c-suite-item"><span>CEO</span><div id="rCeo">-</div></div>
+                <div class="c-suite-item"><span>CTO</span><div id="rCto">-</div></div>
+                <div class="c-suite-item"><span>COO</span><div id="rCoo">-</div></div>
+                <div class="c-suite-item"><span>CFO</span><div id="rCfo">-</div></div>
             </div>
 
             <div class="card">
-                <div class="label">Recommended Outreach</div>
-                <div style="background:rgba(0,0,0,0.2); padding:20px; border-radius:8px; font-style:italic;" id="rBody"></div>
+                <h3>🎯 The Strategic Blueprint</h3>
+                <div class="label">Primary Pitch</div>
+                <div class="value highlight" id="rService"></div>
+                <div class="label">Strategic Rationale</div>
+                <div class="value" id="rReason"></div>
+                <div class="label">Macro Urgency</div>
+                <div class="value" id="rUrgency"></div>
+            </div>
+
+            <div class="card" style="border-top-color: #f59e0b;">
+                <h3>🛡️ Tactics & Objections</h3>
+                <div class="label">Target Personas</div>
+                <div class="value" id="rPersonas"></div>
+                <div class="label">Top Objection & Strategic Defense</div>
+                <div class="value" id="rObjections"></div>
+            </div>
+
+            <div class="card" style="border-top-color: #0ea5e9;">
+                <h3>🤝 Social Selling (LinkedIn)</h3>
+                <div class="label">Connection Note</div>
+                <div class="value"><i id="rLiMsg"></i></div>
+                <button class="action-btn primary" onclick="openLinkedIn()">Locate Decision Makers on LinkedIn 🔍</button>
+            </div>
+
+            <div class="card" style="border-top-color: #10b981;">
+                <h3>✉️ Direct Outreach</h3>
+                <div class="label">Subject Line</div>
+                <div class="value highlight" id="rSubj" style="font-size: 16px;"></div>
+                <div class="label">Email Draft</div>
+                <div class="value" style="background:rgba(255,255,255,0.05); padding:20px; border-radius:8px; font-style:italic;" id="rBody"></div>
+                <button class="action-btn" style="background: #10b981; border: none;" onclick="pushToOutlook()">Push to Outlook Outbox 🚀</button>
             </div>
         </div>
     </div>
 
     <script>
         let timerInterval;
+        let currentLinkedInUrl = "";
 
         async function runEngine() {
             const input = document.getElementById('companyInput').value;
-            if(!input) return;
+            if(!input) return alert("Please enter a company name.");
 
             document.getElementById('loader').style.display = 'block';
             document.getElementById('results').style.display = 'none';
             
-            // Start Countdown
             let timeLeft = 15;
             document.getElementById('timer').innerText = timeLeft + "s";
             timerInterval = setInterval(() => {
@@ -111,30 +165,56 @@
                 const data = JSON.parse(await response.json());
                 clearInterval(timerInterval);
 
-                document.getElementById('rName').innerText = data.company_display_name;
-                document.getElementById('rConfidence').innerText = "Accuracy: " + data.confidence_score;
-                document.getElementById('rSector').innerText = data.sector;
-                document.getElementById('rCountry').innerText = data.country;
-                document.getElementById('rEst').innerText = data.established;
-                document.getElementById('rEmp').innerText = data.employees;
-                document.getElementById('rRev').innerText = data.revenue;
-                document.getElementById('rService').innerText = data.service;
-                document.getElementById('rReason').innerText = data.reason;
-                document.getElementById('rBody').innerText = data.email_body;
+                // Map ALL restored data
+                document.getElementById('rName').innerText = data.company_display_name || input;
+                document.getElementById('rConfidence').innerText = "Accuracy: " + (data.confidence_score || "N/A");
+                document.getElementById('rSector').innerText = data.sector || "N/A";
+                document.getElementById('rCountry').innerText = data.country || "N/A";
+                document.getElementById('rEst').innerText = data.established || "N/A";
+                document.getElementById('rEmp').innerText = data.employees || "N/A";
+                document.getElementById('rRev').innerText = data.revenue || "N/A";
+                
+                document.getElementById('rCeo').innerText = data.c_suite?.CEO || "N/A";
+                document.getElementById('rCto').innerText = data.c_suite?.CTO || "N/A";
+                document.getElementById('rCoo').innerText = data.c_suite?.COO || "N/A";
+                document.getElementById('rCfo').innerText = data.c_suite?.CFO || "N/A";
+
+                document.getElementById('rService').innerText = data.service || "N/A";
+                document.getElementById('rReason').innerText = data.reason || "N/A";
+                document.getElementById('rUrgency').innerText = data.urgency || "N/A";
+                document.getElementById('rPersonas').innerText = data.personas || "N/A";
+                document.getElementById('rObjections').innerText = data.objections || "N/A";
+                
+                document.getElementById('rSubj').innerText = data.email_subject || "N/A";
+                document.getElementById('rBody').innerText = data.email_body || "N/A";
+                
+                // Restored LinkedIn Armor Plate
+                document.getElementById('rLiMsg').innerText = data.linkedin_message || data.linkedin_note || "Hi, I noticed your recent strategic initiatives and would love to connect to discuss how BrightNodes can support your IT infrastructure.";
+                currentLinkedInUrl = data.linkedin_url;
 
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('results').style.display = 'block';
             } catch (e) {
                 clearInterval(timerInterval);
-                alert("Scan Interrupted. Check Render Logs.");
+                alert("Scan Interrupted. Make sure your Render backend is running.");
                 document.getElementById('loader').style.display = 'none';
             }
         }
 
+        function openLinkedIn() {
+            if(currentLinkedInUrl) window.open(currentLinkedInUrl, '_blank');
+        }
+
         function copyToExcel() {
-            const row = `${document.getElementById('rName').innerText}\t${document.getElementById('rSector').innerText}\t${document.getElementById('rCountry').innerText}\t${document.getElementById('rRev').innerText}\t${document.getElementById('rService').innerText}`;
+            const row = `${document.getElementById('rName').innerText}\t${document.getElementById('rSector').innerText}\t${document.getElementById('rCountry').innerText}\t${document.getElementById('rEst').innerText}\t${document.getElementById('rEmp').innerText}\t${document.getElementById('rRev').innerText}\t${document.getElementById('rCeo').innerText}\t${document.getElementById('rService').innerText}\t${document.getElementById('rSubj').innerText}`;
             navigator.clipboard.writeText(row);
-            alert("Row Copied for Excel!");
+            alert("✅ Comprehensive data row copied! Paste directly into Excel.");
+        }
+
+        function pushToOutlook() {
+            const subject = encodeURIComponent(document.getElementById('rSubj').innerText);
+            const body = encodeURIComponent(document.getElementById('rBody').innerText);
+            window.location.href = `mailto:?subject=${subject}&body=${body}`;
         }
     </script>
 </body>
