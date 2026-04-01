@@ -101,7 +101,7 @@
                 document.getElementById('rObjections').innerText = data.objections;
                 document.getElementById('rSubj').innerText = data.email_subject;
                 document.getElementById('rBody').innerText = data.email_body;
-                document.getElementById('rLiMsg').innerText = data.linkedin_message;
+                document.getElementById('rLiMsg').innerText = data.linkedin_message || data.linkedin_note || data.connection_note || "Hi, I noticed your recent strategic initiatives and would love to connect to discuss how BrightNodes can support your IT infrastructure.";
                 
                 // Store the URL globally so the button can use it
                 currentLinkedInUrl = data.linkedin_url;
