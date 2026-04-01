@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>BrightScope AI Engine</title>
+    <title>BrightScope AI Engine V2</title>
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f4f8; color: #333; padding: 40px; }
         .container { max-width: 900px; margin: auto; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
@@ -15,21 +15,21 @@
         .card h3 { margin-top: 0; color: #1f2937; display: flex; align-items: center; gap: 8px; }
         #results { display: none; }
         .loader { display: none; margin-top: 20px; padding: 15px; background: #e0f2fe; color: #0369a1; border-radius: 6px; font-weight: 500; text-align: center; }
-        .label { font-weight: 600; color: #4b5563; }
+        .label { font-weight: 600; color: #4b5563; margin-top: 10px; }
         .value { color: #1f2937; line-height: 1.6; margin-bottom: 15px; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>BrightScope <span>AI Engine</span></h1>
-        <p class="subtitle">Enter a Middle Eastern B2B Target to generate a live sales strategy and automated outreach.</p>
+        <h1>BrightScope <span>| Enterprise Engine V2</span></h1>
+        <p class="subtitle">Enter a Middle Eastern B2B Target to generate a live sales strategy, automated email, and LinkedIn outreach.</p>
         
         <div class="input-group">
             <input type="text" id="companyInput" placeholder="e.g., Emaar Properties, Bigen Group, Al Futtaim...">
-            <button onclick="runEngine()">Generate Strategy</button>
+            <button onclick="runEngine()">Generate Deep Strategy</button>
         </div>
         
-        <div id="loader" class="loader">⚙️ Engine running: Scraping website, analyzing live news, and generating strategy... (This takes ~15 seconds)</div>
+        <div id="loader" class="loader">⚙️ Engine running: Harvesting verified profile, reading full news articles, and structuring JSON...</div>
 
         <div id="results">
             <div class="card" style="border-top-color: #185FA5;">
@@ -38,7 +38,7 @@
                 <div class="value" id="rService" style="font-size: 18px; font-weight: bold; color: #185FA5;"></div>
                 <div class="label">The Reason:</div>
                 <div class="value" id="rReason"></div>
-                <div class="label">Macro Urgency (Vision 2030 / AI Strategy 2031):</div>
+                <div class="label">Macro Urgency:</div>
                 <div class="value" id="rUrgency"></div>
             </div>
 
@@ -50,19 +50,27 @@
                 <div class="value" id="rObjections"></div>
             </div>
 
+            <div class="card" style="border-top-color: #0077b5;">
+                <h3>🤝 Social Selling (LinkedIn)</h3>
+                <div class="label">Connection Note (Under 300 chars):</div>
+                <div class="value"><i id="rLiMsg"></i></div>
+                <button style="background: #0077b5; margin-top: 10px; width: 100%;" onclick="openLinkedIn()">Find Decision Makers on LinkedIn 🔍</button>
+            </div>
+
             <div class="card" style="border-top-color: #1D9E75;">
                 <h3>✉️ 1-Click Outreach</h3>
                 <div class="label">Subject Line:</div>
                 <div class="value" id="rSubj" style="font-weight: bold;"></div>
                 <div class="label">Email Draft:</div>
                 <div class="value"><i id="rBody"></i></div>
-                
                 <button style="background: #1D9E75; margin-top: 10px; width: 100%;" onclick="pushToOutlook()">Push to Outlook Outbox 🚀</button>
             </div>
         </div>
     </div>
 
     <script>
+        let currentLinkedInUrl = "";
+
         async function runEngine() {
             const company = document.getElementById('companyInput').value;
             if(!company) return alert("Please enter a company name!");
@@ -71,7 +79,7 @@
             document.getElementById('results').style.display = 'none';
 
             try {
-                // Sends the company name to your LIVE Cloud Python server!
+                // Pointing to your LIVE Render server!
                 const response = await fetch('https://brightscope-backend.onrender.com/analyse', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -93,19 +101,28 @@
                 document.getElementById('rObjections').innerText = data.objections;
                 document.getElementById('rSubj').innerText = data.email_subject;
                 document.getElementById('rBody').innerText = data.email_body;
+                document.getElementById('rLiMsg').innerText = data.linkedin_message;
+                
+                // Store the URL globally so the button can use it
+                currentLinkedInUrl = data.linkedin_url;
 
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('results').style.display = 'block';
             } catch (error) {
-                alert("Could not connect to the engine. Make sure your Python server is running!");
+                alert("Could not connect to the engine. Make sure your Python server (app.py) is running in the background!");
                 document.getElementById('loader').style.display = 'none';
+            }
+        }
+
+        function openLinkedIn() {
+            if(currentLinkedInUrl) {
+                window.open(currentLinkedInUrl, '_blank');
             }
         }
 
         function pushToOutlook() {
             const subject = encodeURIComponent(document.getElementById('rSubj').innerText);
             const body = encodeURIComponent(document.getElementById('rBody').innerText);
-            // This triggers your default mail client (Outlook) to draft the email!
             window.location.href = `mailto:?subject=${subject}&body=${body}`;
         }
     </script>
