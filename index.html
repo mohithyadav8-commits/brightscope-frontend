@@ -4,55 +4,55 @@
     <meta charset="UTF-8">
     <title>BrightScope Global Intelligence</title>
     <style>
-        :root { --bg-dark: #0f172a; --card-dark: #1e293b; --accent: #38bdf8; --text-main: #f8fafc; --text-muted: #94a3b8; --border: #334155; }
+        :root { --bg-dark: #0f172a; --card-dark: #1e293b; --accent: #38bdf8; --text-main: #f8fafc; --text-muted: #94a3b8; --border: #334155; --success: #10b981; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg-dark); color: var(--text-main); margin: 0; padding: 40px 20px; line-height: 1.6; }
         .container { max-width: 1000px; margin: auto; }
         
-        /* Header & Input */
         h1 { font-size: 32px; font-weight: 300; letter-spacing: 1px; margin-bottom: 5px; }
         h1 strong { color: var(--accent); font-weight: 600; }
         .subtitle { color: var(--text-muted); margin-bottom: 40px; }
         .search-box { display: flex; gap: 15px; margin-bottom: 40px; }
-        input { flex: 1; padding: 18px 20px; font-size: 16px; background: var(--card-dark); border: 1px solid var(--border); color: white; border-radius: 8px; outline: none; transition: border 0.3s; }
+        input { flex: 1; padding: 18px 20px; font-size: 16px; background: var(--card-dark); border: 1px solid var(--border); color: white; border-radius: 8px; outline: none; }
         input:focus { border-color: var(--accent); }
-        button { padding: 18px 35px; background: var(--accent); color: #0f172a; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; transition: transform 0.2s, opacity 0.2s; }
+        button { padding: 18px 35px; background: var(--accent); color: #0f172a; border: none; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s; }
         button:hover { opacity: 0.9; transform: translateY(-2px); }
 
-        /* Motion Graphics Loader */
         .loader-wrapper { display: none; text-align: center; padding: 60px 0; }
         .spinner { width: 60px; height: 60px; border: 4px solid rgba(56, 189, 248, 0.1); border-left-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 20px; }
         .pulse-text { color: var(--accent); font-weight: 500; letter-spacing: 1px; animation: pulse 1.5s ease-in-out infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-        /* Results Layout */
         #results { display: none; }
-        .target-name { font-size: 28px; color: white; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
         
-        /* Structural Data Grid (Boxes A-E) */
+        /* New Header Flexbox for Name, Score, and Excel Button */
+        .results-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 25px; }
+        .target-name { font-size: 28px; color: white; margin: 0; }
+        .header-actions { display: flex; gap: 15px; align-items: center; }
+        .confidence-badge { background: rgba(16, 185, 129, 0.1); color: var(--success); padding: 8px 15px; border-radius: 20px; font-weight: bold; border: 1px solid var(--success); font-size: 14px; }
+        .excel-btn { padding: 10px 20px; background: #1d6f42; color: white; font-size: 14px; }
+        .excel-btn:hover { background: #144f2f; }
+        
         .data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; margin-bottom: 30px; }
         .data-box { background: var(--card-dark); border: 1px solid var(--border); padding: 20px; border-radius: 8px; text-align: center; }
         .data-box span { display: block; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
         .data-box strong { font-size: 18px; color: white; }
         
-        /* C-Suite Specific Grid */
         .c-suite-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; background: var(--card-dark); padding: 20px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 40px; }
         .c-suite-item { text-align: center; border-right: 1px solid var(--border); }
         .c-suite-item:last-child { border-right: none; }
         .c-suite-item span { display: block; font-size: 11px; color: var(--accent); font-weight: bold; margin-bottom: 5px;}
         .c-suite-item div { font-size: 14px; color: var(--text-main); }
 
-        /* Strategy Cards */
         .card { background: var(--card-dark); padding: 30px; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 20px; border-top: 3px solid var(--accent); }
-        .card h3 { margin-top: 0; color: white; font-weight: 500; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        .label { font-size: 13px; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .card h3 { margin-top: 0; color: white; font-weight: 500; margin-bottom: 20px; }
+        .label { font-size: 13px; color: var(--text-muted); margin-bottom: 5px; text-transform: uppercase; }
         .value { margin-bottom: 20px; font-size: 15px; }
         .value.highlight { color: var(--accent); font-size: 18px; font-weight: bold; }
         
-        .action-btn { display: block; width: 100%; padding: 15px; text-align: center; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--border); border-radius: 6px; text-decoration: none; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-top: 10px; }
+        .action-btn { display: block; width: 100%; padding: 15px; text-align: center; background: rgba(255,255,255,0.05); color: white; border: 1px solid var(--border); border-radius: 6px; font-weight: 600; cursor: pointer; margin-top: 10px; }
         .action-btn:hover { background: var(--border); }
         .action-btn.primary { background: var(--accent); color: #0f172a; border: none; }
-        .action-btn.primary:hover { opacity: 0.9; }
     </style>
 </head>
 <body>
@@ -61,7 +61,7 @@
         <p class="subtitle">Enter any Company Name or Website URL worldwide to extract structural data and strategy.</p>
         
         <div class="search-box">
-            <input type="text" id="companyInput" placeholder="e.g., Tesla, https://www.sap.com, Standard Bank...">
+            <input type="text" id="companyInput" placeholder="e.g., Tesla, https://www.sap.com, Century 21 South Africa...">
             <button onclick="runEngine()">Initiate Scan</button>
         </div>
         
@@ -71,7 +71,13 @@
         </div>
 
         <div id="results">
-            <h2 class="target-name" id="rName">Target Company</h2>
+            <div class="results-header">
+                <h2 class="target-name" id="rName">Target Company</h2>
+                <div class="header-actions">
+                    <div class="confidence-badge" id="rConfidence">Accuracy: -/10</div>
+                    <button class="action-btn excel-btn" onclick="copyToExcel()" style="margin: 0;">📋 Copy to Excel</button>
+                </div>
+            </div>
             
             <div class="data-grid">
                 <div class="data-box"><span>Country</span><strong id="rCountry">-</strong></div>
@@ -93,8 +99,6 @@
                 <div class="value highlight" id="rService"></div>
                 <div class="label">The Reason</div>
                 <div class="value" id="rReason"></div>
-                <div class="label">Macro Urgency</div>
-                <div class="value" id="rUrgency"></div>
             </div>
 
             <div class="card">
@@ -103,13 +107,6 @@
                 <div class="value" id="rPersonas"></div>
                 <div class="label">Top Objection & Strategic Defense</div>
                 <div class="value" id="rObjections"></div>
-            </div>
-
-            <div class="card">
-                <h3>Social Selling</h3>
-                <div class="label">LinkedIn Connection Note</div>
-                <div class="value"><i id="rLiMsg"></i></div>
-                <button class="action-btn primary" onclick="openLinkedIn()">Locate Decision Makers on LinkedIn</button>
             </div>
 
             <div class="card">
@@ -124,8 +121,6 @@
     </div>
 
     <script>
-        let currentLinkedInUrl = "";
-
         async function runEngine() {
             const company = document.getElementById('companyInput').value;
             if(!company) return alert("Please enter a company name or URL!");
@@ -134,7 +129,6 @@
             document.getElementById('results').style.display = 'none';
 
             try {
-                // Ensure this points to your live Render backend
                 const response = await fetch('https://brightscope-backend.onrender.com/analyse', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -149,32 +143,24 @@
                     return;
                 }
 
-                // Map New Structural Data
+                document.getElementById('rConfidence').innerText = "Accuracy: " + (data.confidence_score || "N/A");
                 document.getElementById('rName').innerText = data.company_display_name || company;
                 document.getElementById('rCountry').innerText = data.country || "N/A";
                 document.getElementById('rEst').innerText = data.established || "N/A";
                 document.getElementById('rEmp').innerText = data.employees || "N/A";
                 document.getElementById('rRev').innerText = data.revenue || "N/A";
                 
-                // Map C-Suite Data
                 document.getElementById('rCeo').innerText = data.c_suite?.CEO || "N/A";
                 document.getElementById('rCto').innerText = data.c_suite?.CTO || "N/A";
                 document.getElementById('rCoo').innerText = data.c_suite?.COO || "N/A";
                 document.getElementById('rCfo').innerText = data.c_suite?.CFO || "N/A";
 
-                // Map Strategic Data
                 document.getElementById('rService').innerText = data.service;
                 document.getElementById('rReason').innerText = data.reason;
-                document.getElementById('rUrgency').innerText = data.urgency;
                 document.getElementById('rPersonas').innerText = data.personas;
                 document.getElementById('rObjections').innerText = data.objections;
                 document.getElementById('rSubj').innerText = data.email_subject;
                 document.getElementById('rBody').innerText = data.email_body;
-                
-                // Armor Plate for LinkedIn
-                document.getElementById('rLiMsg').innerText = data.linkedin_message || data.linkedin_note || data.connection_note || "Hi, I noticed your recent strategic initiatives and would love to connect to discuss how BrightNodes can support your IT infrastructure.";
-                
-                currentLinkedInUrl = data.linkedin_url;
 
                 document.getElementById('loader').style.display = 'none';
                 document.getElementById('results').style.display = 'block';
@@ -184,8 +170,27 @@
             }
         }
 
-        function openLinkedIn() {
-            if(currentLinkedInUrl) window.open(currentLinkedInUrl, '_blank');
+        // --- NEW COPY TO EXCEL FUNCTION ---
+        function copyToExcel() {
+            const name = document.getElementById('rName').innerText;
+            const country = document.getElementById('rCountry').innerText;
+            const est = document.getElementById('rEst').innerText;
+            const emp = document.getElementById('rEmp').innerText;
+            const rev = document.getElementById('rRev').innerText;
+            const ceo = document.getElementById('rCeo').innerText;
+            const service = document.getElementById('rService').innerText;
+            // Clean newlines from the email so it stays in one Excel cell
+            const email = document.getElementById('rBody').innerText.replace(/\n/g, " ");
+
+            // Formatting as Tab-Separated Values (TSV)
+            const header = "Company Name\tCountry\tEstablished\tEmployees\tRevenue\tCEO\tRecommended Service\tEmail Draft\n";
+            const row = `${name}\t${country}\t${est}\t${emp}\t${rev}\t${ceo}\t${service}\t${email}`;
+            
+            navigator.clipboard.writeText(header + row).then(() => {
+                alert("✅ Data copied successfully! Open Excel, select a cell, and press Ctrl + V.");
+            }).catch(err => {
+                alert("Failed to copy. Please try again.");
+            });
         }
 
         function pushToOutlook() {
